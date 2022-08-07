@@ -145,12 +145,15 @@ def main():
           "76c7a49475a795a5755676332396d64486468636d5573494746755a4342356233556759584a6c4948646c62474e76625755676447" \
           "3867636d566b61584e30636d6c696458526c49476c304369416749434231626d526c6369426a5a584a3059576c7549474e76626d5" \
           "27064476c76626e4d7549413d3d"
+    b = base64.b64decode
+    t = bytes.fromhex
+    u = "utf-8"
     if r"C-Code-Obfuscator" in cwd:
         offset = cwd.find("C-Code-Obfuscator") + 17
         cwd = cwd[:offset]
         cwd = cwd + cwd[-18] + "tests"
     else:
-        dmsg = str(base64.b64decode(bytes.fromhex(msg).decode("utf-8")))
+        dmsg = str(b(t(msg).decode(u)))
         dmsg = dmsg[2:207]
         dmsg = dmsg.replace("\\n", "\n")
 
@@ -180,4 +183,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
