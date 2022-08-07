@@ -61,6 +61,48 @@ def variable_renamer(given_string):
     return new_string
 
 
+def random_c_code():
+    c_code = """
+        int {} = {};
+        string {} = "{}";
+    """.format(random_string(12), random_int(0, 100), random_string(12), random_string(12))
+
+    return c_code
+
+
+def whitespace_remover(a):
+    """
+    Function to remove all whitespace, except for after functions, variables, and imports
+    """
+    splits = re.split('\"', a)
+    code_string = "((\w+\s+)[a-zA-Z_*][|a-zA-Z0-9_]*|#.*|return [a-zA-Z0-9_]*| [[.].]|else)"
+    index = 0
+    a = ""
+    for s in splits:
+        # If it's not the contents of a string, remove spaces of everything but code
+        if index % 2 == 0:
+            s_spaceless = re.sub("[\s]", "", s)  # Create a spaceless version of s
+            s_code = re.findall(code_string, s)  # find all spaced code blocks in s
+            for code in s_code:
+                old = re.sub("[\s]", "", code[0])
+                new = code[0]
+                if code[0][0] == '#':
+                    new = code[0] + "\n"  # Adding a newline for preprocessor commands
+                elif "unsigned" in code[0] or "else" in code[0]:
+                    new = code[0] + " "
+                s_spaceless = s_spaceless.replace(old,
+                                                  new)  # Replace the spaceless code blocks in s with their spaced
+                # equivalents
+        else:
+            s_spaceless = s
+        if index >= 1:
+            a = a + "\"" + s_spaceless
+        else:
+            a = a + s_spaceless
+        index += 1
+    return a
+
+
 def random_string(stringLength=8):
     """
     Function to generate a random string with given length.
